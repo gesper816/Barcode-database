@@ -135,14 +135,23 @@
   .btn-block{width:100%;}
   .btn:disabled{opacity:.45; cursor:not-allowed;}
 
-  input[type=text], input[type=number], select, textarea{
+  input[type=text], input[type=number], input[type=password], input[type=email], select, textarea{
     width:100%; font-family:'Space Mono',monospace; font-size:15px; padding:11px 12px;
     border:1.5px solid var(--line); border-radius:9px; background:#fff; color:var(--ink);
   }
   textarea{resize:vertical; min-height:64px;}
-  input[type=text]:focus, select:focus, textarea:focus{outline:2px solid var(--signal); outline-offset:1px;}
+  input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, select:focus, textarea:focus{
+    outline:2px solid var(--signal); outline-offset:1px; border-color:var(--signal);
+  }
   input[type=file]{
     width:100%; font-family:'Inter',sans-serif; font-size:12.5px; padding:8px 0;
+  }
+  .login-card input[type=text], .login-card input[type=password], .login-card input[type=email]{
+    font-family:'Inter',sans-serif; font-size:15px; padding:13px 14px; background:var(--paper);
+    letter-spacing:0.01em;
+  }
+  .login-card input[type=text]::placeholder, .login-card input[type=password]::placeholder{
+    color:#9BA6A3;
   }
   .field{margin-bottom:12px;}
   .field label{
@@ -301,8 +310,8 @@
     <p class="eyebrow">Вход</p>
     <h2 id="authTitle">Войти</h2>
     <p id="authIntro">Войдите по email — так ваша база товаров будет доступна с любого устройства, и никто другой её не увидит.</p>
-    <div class="field"><label>Email</label><input type="text" id="authEmail" placeholder="you@example.com"></div>
-    <div class="field" style="margin-bottom:14px;"><label>Пароль</label><input type="password" id="authPassword" placeholder="не менее 6 символов"></div>
+    <div class="field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email"></div>
+    <div class="field" style="margin-bottom:14px;"><label>Пароль</label><input type="password" id="authPassword" placeholder="не менее 6 символов" autocomplete="current-password"></div>
     <button class="btn btn-signal btn-block" id="btnAuthSubmit" style="margin-bottom:8px;">Войти</button>
     <button class="btn btn-ghost btn-block" id="btnAuthToggle" type="button">Ещё нет аккаунта? Зарегистрироваться</button>
     <p class="hint" id="authHint"></p>
