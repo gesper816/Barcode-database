@@ -502,11 +502,24 @@
 
   // ---------- Supabase connection (credentials come from config.js) ----------
   var supabaseClient = null;
-  var configOk = !!(window.SUPABASE_URL && window.SUPABASE_ANON_KEY && window.SUPABASE_URL.indexOf('ВСТАВЬТЕ') === -1);
+  var scriptLoaded = (typeof window.SUPABASE_URL !== 'undefined') && (typeof window.SUPABASE_ANON_KEY !== 'undefined');
+  var stillPlaceholder = scriptLoaded && String(window.SUPABASE_URL).indexOf('ВСТАВЬТЕ') !== -1;
+  var configOk = scriptLoaded && !!window.SUPABASE_URL && !!window.SUPABASE_ANON_KEY && !stillPlaceholder;
+
   if(configOk){
-    supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-  } else {
-    document.getElementById('authIntro').textContent = 'Приложение не настроено: заполните SUPABASE_URL и SUPABASE_ANON_KEY в файле config.js.';
+    try{
+      supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    }catch(e){
+      configOk = false;
+      document.getElementById('authIntro').textContent = 'Не удалось создать клиент Supabase — проверьте, что SUPABASE_URL и SUPABASE_ANON_KEY скопированы верно (без лишних кавычек/пробелов).';
+    }
+  }
+  if(!configOk && scriptLoaded === false){
+    document.getElementById('authIntro').textContent = 'Файл config.js не загрузился. Проверьте, что он лежит в той же папке, что и index.html, и называется именно "config.js" — либо что вы открываете сайт по адресу хостинга, а не как отдельный файл.';
+  } else if(!configOk && stillPlaceholder){
+    document.getElementById('authIntro').textContent = 'В config.js всё ещё стоят исходные плейсхолдеры — вставьте туда настоящие Project URL и anon key из Supabase (Project Settings → Data API).';
+  }
+  if(!configOk){
     document.getElementById('authEmail').disabled = true;
     document.getElementById('authPassword').disabled = true;
     document.getElementById('btnAuthSubmit').disabled = true;
